@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch the orders and order details from the database
-$orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at
+$orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at, p.payment_method
                  FROM payments p
                  WHERE p.user_id = ? 
                  ORDER BY p.created_at DESC";
@@ -57,7 +57,7 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                         <div class="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
                             <h3 class="sr-only">Order placed on <?= date('M d, Y', strtotime($order['created_at'])); ?></h3>
                             <div class="flex items-center border-b border-gray-200 p-4 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:p-6">
-                                <dl class="grid flex-1 grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3 lg:col-span-2">
+                                <dl class="grid flex-1 grid-cols-4 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-4 lg:col-span-4">
                                     <div>
                                         <dt class="font-medium text-gray-900">Order number</dt>
                                         <dd class="mt-1 text-gray-500"><?= $order['order_id']; ?></dd>
@@ -71,6 +71,10 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                                     <div>
                                         <dt class="font-medium text-gray-900">Total amount</dt>
                                         <dd class="mt-1 font-medium text-gray-900">₱ <?= number_format($order['amount'], 2); ?></dd>
+                                    </div>
+                                    <div>
+                                        <dt class="font-medium text-gray-900">Payment Method</dt>
+                                        <dd class="mt-1 font-medium text-gray-900"><?= $order['payment_method']; ?></dd>
                                     </div>
                                 </dl>
                             </div>

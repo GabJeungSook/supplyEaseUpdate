@@ -141,20 +141,22 @@ while ($row = $result->fetch_assoc()) {
                     <!-- <p class="mt-1 text-sm text-gray-500">Shipping and taxes will be calculated at checkout.</p> -->
                 </div>
 
-                        <div class="mt-10">
-                            <div id="paypal-button-container">
-
-                            </div>
-                        </div>
-                        <div class="mt-6 text-center text-sm">
-                        <p>
-                            or
-                            <a href="index.php" class="font-medium text-indigo-600 hover:text-indigo-500">
-                            Continue Shopping
-                            <span aria-hidden="true"> &rarr;</span>
-                            </a>
-                        </p>
-                </div>
+            <div class="mt-10">
+                <div id="paypal-button-container"></div>
+            </div>
+            <div class="mt-4">
+                <button type="button" class="w-full rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        onclick="handleCOD()">Cash on Delivery</button>
+            </div>
+            <div class="mt-6 text-center text-sm">
+                <p>
+                    or
+                    <a href="index.php" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    Continue Shopping
+                    <span aria-hidden="true"> &rarr;</span>
+                    </a>
+                </p>
+            </div>
             </section>
         </form>
     </div>
@@ -185,7 +187,8 @@ while ($row = $result->fetch_assoc()) {
             formData.append('paymentDetails', JSON.stringify(details));
             formData.append('orderDetails', JSON.stringify(orderDetails)); // Add order items
             formData.append('totalAmount', totalAmount); // Include the total amount
-            
+            formData.append('payment_method', 'PAYPAL');
+            console.log(formData);
             fetch('process_payment.php', {
                 method: 'POST',
                 body: formData
@@ -209,6 +212,50 @@ while ($row = $result->fetch_assoc()) {
         alert('An error occurred during the transaction.');
     }
 }).render('#paypal-button-container');
+
+
+</script>
+<script>
+//cod
+function handleCOD() {
+    // Fetch order details and total amount from PHP variables
+    const orderDetails = <?php echo json_encode($cart_items); ?>;
+    const totalAmount = <?php echo $total; ?>;
+
+    // Confirm action with the user
+    if (confirm('Are you sure you want to place an order with Cash on Delivery?')) {
+        // Create FormData to send to the server
+        const formData = new FormData();
+        formData.append('orderID', 'COD-' + Date.now()); // Generate unique order ID
+        formData.append('payerID', 'COD-' + Date.now()); // Generate unique payer ID
+        formData.append('paymentStatus', 'COD'); // Add payment details
+        formData.append('orderDetails', JSON.stringify(orderDetails)); // Add order items
+        formData.append('totalAmount', totalAmount); // Include the total amount
+        formData.append('payment_method', 'COD'); // Specify payment method
+
+        // Send data to process_payment.php via POST
+        fetch('process_payment_cod.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // If the server responds with success
+                    alert('Order placed successfully with Cash on Delivery!');
+                    window.location.href = 'payment_success.php'; // Redirect to success page
+                } else {
+                    // If the server responds with an error
+                    alert('Order placement failed: ' + data.message);
+                }
+            })
+            .catch(err => {
+                // Catch and log any errors
+                console.error(err);
+                alert('An error occurred while placing your order.'+ err);
+            });
+    }
+}
 </script>
 </body>
 </html>

@@ -6,14 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve PayPal data
     $orderID = $_POST['orderID'];
     $payerID = $_POST['payerID'];
-    $paymentDetails = json_decode($_POST['paymentDetails'], true);
+    $paymentStatus = $_POST['paymentStatus'];
     $orderDetails = json_decode($_POST['orderDetails'], true); // Get order items (cart details)
     $totalAmount = $_POST['totalAmount']; // The total amount of the payment
     $payment_method = $_POST['payment_method'];
 
-
-    // Validate and process payment
-    if ($paymentDetails['status'] === 'COMPLETED') {
         $user_id = $_SESSION['user_id'];
 
         // Insert payment details into the payments table
@@ -26,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id,
             $orderID,
             $payerID,
-            $paymentDetails['status'],
-            $paymentDetails['purchase_units'][0]['amount']['value'],
+            $paymentStatus,
+            $totalAmount,
             $payment_method
         );
         $stmt->execute();
@@ -65,9 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Return success response
         echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Payment not completed.']);
-    }
 } else {
     http_response_code(405); // Method not allowed
     echo json_encode(['success' => false, 'message' => 'Invalid request.']);
