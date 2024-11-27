@@ -72,16 +72,16 @@ if (!$product) {
             <!-- Image Container -->
             <div class="carousel-container relative">
               <!-- Main product image -->
-              <img src="http://146.190.85.108/SupplyEaseUpdate/admin/pages/<?php echo htmlspecialchars($product['image1']); ?>" 
+              <img src="http://146.190.85.108/admin/pages/<?php echo htmlspecialchars($product['image1']); ?>" 
                    alt="Main image of <?php echo htmlspecialchars($product['description']); ?>" 
                    class="carousel-item rounded-lg w-full h-[400px] object-cover mb-4">
               <?php if (!empty($product['image2'])): ?>
-              <img src="http://146.190.85.108/SupplyEaseUpdate/admin/pages/<?php echo htmlspecialchars($product['image2']); ?>" 
+              <img src="http://146.190.85.108/admin/pages/<?php echo htmlspecialchars($product['image2']); ?>" 
                    alt="Secondary image of <?php echo htmlspecialchars($product['description']); ?>" 
                    class="carousel-item hidden rounded-lg w-full h-[400px] object-cover">
               <?php endif; ?>
               <?php if (!empty($product['image3'])): ?>
-              <img src="http://146.190.85.108/SupplyEaseUpdate/admin/pages/<?php echo htmlspecialchars($product['image3']); ?>" 
+              <img src="http://146.190.85.108/admin/pages/<?php echo htmlspecialchars($product['image3']); ?>" 
                    alt="Third image of <?php echo htmlspecialchars($product['description']); ?>" 
                    class="carousel-item hidden rounded-lg w-full h-[400px] object-cover">
               <?php endif; ?>

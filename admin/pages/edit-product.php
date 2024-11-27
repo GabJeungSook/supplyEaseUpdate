@@ -141,7 +141,7 @@ $conn->close();
                         if ($product['image1']) { 
                             // Construct the correct path for the image
                             $imagePath = str_replace('C:\\xampp\\htdocs\\SupplyEaseUpdate\\admin\\pages\\', '', $product['image1']);
-                            echo "<img src='http://146.190.85.108/SupplyEaseUpdate/admin/pages/" . htmlspecialchars($imagePath) . "' class='mt-2' alt='Image 2' width='200' />";
+                            echo "<img src='http://146.190.85.108/admin/pages/" . htmlspecialchars($imagePath) . "' class='mt-2' alt='Image 2' width='200' />";
                         } 
                         ?>
                     </div>
@@ -152,7 +152,7 @@ $conn->close();
                         if ($product['image2']) { 
                             // Construct the correct path for the image
                             $imagePath = str_replace('C:\\xampp\\htdocs\\SupplyEaseUpdate\\admin\\pages\\', '', $product['image2']);
-                            echo "<img src='http://146.190.85.108/SupplyEaseUpdate/admin/pages/" . htmlspecialchars($imagePath) . "' class='mt-2' alt='Image 2' width='200' />";
+                            echo "<img src='http://146.190.85.108/admin/pages/" . htmlspecialchars($imagePath) . "' class='mt-2' alt='Image 2' width='200' />";
                         } 
                         ?>
                     </div>
@@ -164,7 +164,7 @@ $conn->close();
                         if ($product['image3']) { 
                             // Construct the correct path for the image
                             $imagePath = str_replace('C:\\xampp\\htdocs\\SupplyEaseUpdate\\admin\\pages\\', '', $product['image3']);
-                            echo "<img src='http://146.190.85.108/SupplyEaseUpdate/admin/pages/" . htmlspecialchars($imagePath) . "' class='mt-2' alt='Image 2' width='200' />";
+                            echo "<img src='http://146.190.85.108/admin/pages/" . htmlspecialchars($imagePath) . "' class='mt-2' alt='Image 2' width='200' />";
                         } 
                         ?>
                     </div>
