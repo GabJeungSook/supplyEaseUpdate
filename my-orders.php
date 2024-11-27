@@ -171,7 +171,7 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                                     <li class="p-4 sm:p-6">
                                         <div class="flex items-center sm:items-start">
                                             <div class="size-20 shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:size-40">
-                                                <img src="http://localhost/SupplyEaseUpdate/admin/pages/<?= $item['image1']; ?>" alt="<?= $item['description']; ?>" class="size-full object-cover">
+                                                <img src="http://146.190.85.108/SupplyEaseUpdate/admin/pages/<?= $item['image1']; ?>" alt="<?= $item['description']; ?>" class="size-full object-cover">
                                             </div>
                                            
 

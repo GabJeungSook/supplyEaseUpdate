@@ -91,7 +91,7 @@ $order_items_result = $stmt2->get_result();
                         <li class="px-4 py-5 sm:px-6">
                             <div class="flex items-center">
                                 <div class="shrink-0">
-                                    <img src="http://localhost/SupplyEaseUpdate/admin/pages/<?= htmlspecialchars($item['image1']); ?>" alt="<?= htmlspecialchars($item['description']); ?>" class="h-20 w-20 object-cover rounded-md">
+                                    <img src="http://146.190.85.108/SupplyEaseUpdate/admin/pages/<?= htmlspecialchars($item['image1']); ?>" alt="<?= htmlspecialchars($item['description']); ?>" class="h-20 w-20 object-cover rounded-md">
                                 </div>
                                 <div class="ml-6 flex-1">
                                     <div class="text-sm font-medium text-gray-900"><?= htmlspecialchars($item['description']); ?></div>
