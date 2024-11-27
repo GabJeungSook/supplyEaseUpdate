@@ -1,9 +1,9 @@
 <?php
 // Database configuration
-$host = 'localhost';        // Database host
-$db_name = 'supply_ease_new'; // Database name
-$username = 'root'; // Database username
-$password = ''; // Database password
+$host = '127.0.0.1';        // Database host
+$db_name = 'supplyease_new'; // Database name
+$username = 'supplyease_user'; // Database username
+$password = 'supplyease_password'; // Database password
 
 // Create a connection
 $conn = new mysqli($host, $username, $password, $db_name);
