@@ -10,7 +10,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $order_id = $_GET['id'];
 
 // Fetch order details from the payments table
-$order_query = "SELECT p.id, p.order_id, p.amount, p.created_at, u.name AS user_name
+$order_query = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.created_at, u.name AS user_name
                 FROM payments p
                 JOIN users u ON p.user_id = u.id
                 WHERE p.id = ?";
@@ -69,6 +69,10 @@ $order_items_result = $stmt2->get_result();
                     <div class="px-4 py-5 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Total Amount</dt>
                         <dd class="mt-1 text-sm text-gray-900">₱ <?= number_format($order['amount'], 2); ?></dd>
+                    </div>
+                    <div class="px-4 py-5 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Payment Method</dt>
+                        <dd class="mt-1 text-sm text-gray-900"><?= htmlspecialchars($order['payment_method']); ?></dd>
                     </div>
                     <div class="px-4 py-5 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Date Ordered</dt>

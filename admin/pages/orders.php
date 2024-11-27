@@ -3,7 +3,7 @@
 require_once '../config.php'; // Assuming config.php contains the database connection
 
 // Fetch orders from the payments table along with the user's name
-$sql = "SELECT p.id, p.order_id, p.amount, p.created_at, u.name AS user_name 
+$sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.created_at, u.name AS user_name 
         FROM payments p
         JOIN users u ON p.user_id = u.id"; // Joining with the users table to get the user's name
 $result = $conn->query($sql);
@@ -37,6 +37,7 @@ if ($result === false) {
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">User Name</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Order ID</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Total Amount</th>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Payment Method</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Date Created</th>
                                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                     <span class="sr-only">View Details</span>
@@ -52,6 +53,7 @@ if ($result === false) {
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0'>" . htmlspecialchars($row['user_name']) . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . htmlspecialchars($row['order_id']) . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>₱ " . number_format($row['amount'], 2) . "</td>";
+                                    echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . htmlspecialchars($row['payment_method']) . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . date('M d, Y', strtotime($row['created_at'])) . "</td>";
                                     echo "<td class='relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0'>";
                                     

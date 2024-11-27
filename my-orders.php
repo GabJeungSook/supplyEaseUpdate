@@ -10,6 +10,26 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// Query to fetch user data from `users` and `user_details` tables
+$users_query = "
+    SELECT 
+        users.name, 
+        users.email, 
+        user_details.full_address, 
+        user_details.contact_number, 
+        user_details.gender, 
+        user_details.birthday
+    FROM users
+    INNER JOIN user_details ON users.id = user_details.user_id
+    WHERE users.id = ?
+";
+
+$stmt = $conn->prepare($users_query);
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$userData = $result->fetch_assoc();
+
 // Fetch the orders and order details from the database
 $orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at, p.payment_method
                  FROM payments p
@@ -41,6 +61,64 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
     &larr; Back to Home
 </a>
 <div class="bg-white">
+<div class="py-16 sm:py-24">
+        <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
+            <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-0">
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">My Profile</h1>
+            </div>
+        </div>
+
+        <div class="mt-16">
+            <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
+                <div class="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
+                    <div class="p-4 border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+                           <!-- profile content -->
+                           <div>
+    <div class="mt-6 border-t border-gray-100">
+        <dl class="divide-y divide-gray-100">
+            <!-- Full Name -->
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Full name</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"><?php echo htmlspecialchars($userData['name']); ?></dd>
+            </div>
+            <!-- Birthday -->
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Birthday</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"> <?php echo htmlspecialchars(date('F d, Y', strtotime($userData['birthday']))); ?></dd>
+            </div>
+            <!-- Email Address -->
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Email address</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"><?php echo htmlspecialchars($userData['email']); ?></dd>
+            </div>
+            <!-- Gender -->
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Gender</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"><?php echo htmlspecialchars($userData['gender']); ?></dd>
+            </div>
+            <!-- Contact Number -->
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Contact Number</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"><?php echo htmlspecialchars($userData['contact_number']); ?></dd>
+            </div>
+            <!-- About -->
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Full Address</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"><?php echo htmlspecialchars($userData['full_address']); ?>
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="py-16 sm:py-24">
         <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
             <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-0">
