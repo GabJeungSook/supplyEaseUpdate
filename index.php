@@ -54,7 +54,7 @@ $products = mysqli_fetch_all($productsResult, MYSQLI_ASSOC);
               <!-- If user is logged in, show name and logout button -->
               <span class="text-lg font-medium text-white border-r-2 pr-4">Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</span>
               <a href="my-orders.php" class="text-sm font-medium text-white hover:text-gray-100">My Profile</a>
-              <a href="my-orders.php" class="text-sm font-medium text-white hover:text-gray-100">Contact Admin</a>
+              <a href="contact-admin.php" class="text-sm font-medium text-white hover:text-gray-100">Contact Admin</a>
               <a href="logout.php" class="text-sm font-medium text-white hover:text-gray-100">Log out</a>
                 <!-- Cart Icon -->
             <a href="cart.php" class="text-sm font-medium text-white hover:text-gray-100">

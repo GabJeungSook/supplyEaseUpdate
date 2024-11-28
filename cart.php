@@ -100,7 +100,7 @@ while ($row = $result->fetch_assoc()) {
                     <?php foreach ($cart_items as $item): ?>
                         <li class="flex py-6">
                             <div class="shrink-0">
-                                <img src="http://146.190.85.108/SupplyEaseUpdate/admin/pages/<?php echo htmlspecialchars($item['product_image']); ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>" class="size-24 rounded-md object-cover sm:size-32">
+                                <img src="http://146.190.85.108/admin/pages/<?php echo htmlspecialchars($item['product_image']); ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>" class="size-24 rounded-md object-cover sm:size-32">
                             </div>
                             <div class="ml-4 flex flex-1 flex-col sm:ml-6">
                                 <div>

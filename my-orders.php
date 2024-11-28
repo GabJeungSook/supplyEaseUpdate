@@ -31,7 +31,7 @@ $result = $stmt->get_result();
 $userData = $result->fetch_assoc();
 
 // Fetch the orders and order details from the database
-$orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at, p.payment_method
+$orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at, p.payment_method, p.status
                  FROM payments p
                  WHERE p.user_id = ? 
                  ORDER BY p.created_at DESC";
@@ -123,7 +123,7 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
         <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
             <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-0">
                 <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">My Orders</h1>
-                <p class="mt-2 text-sm text-gray-500">Check the status of recent orders, manage returns, and discover similar products.</p>
+                <!-- <p class="mt-2 text-sm text-gray-500">Check the status of recent orders, manage returns, and discover similar products.</p> -->
             </div>
         </div>
 
@@ -135,7 +135,7 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                         <div class="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
                             <h3 class="sr-only">Order placed on <?= date('M d, Y', strtotime($order['created_at'])); ?></h3>
                             <div class="flex items-center border-b border-gray-200 p-4 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:p-6">
-                                <dl class="grid flex-1 grid-cols-4 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-4 lg:col-span-4">
+                                <dl class="grid flex-1 grid-cols-5 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-5 lg:col-span-5">
                                     <div>
                                         <dt class="font-medium text-gray-900">Order number</dt>
                                         <dd class="mt-1 text-gray-500"><?= $order['order_id']; ?></dd>
@@ -153,6 +153,18 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                                     <div>
                                         <dt class="font-medium text-gray-900">Payment Method</dt>
                                         <dd class="mt-1 font-medium text-gray-900"><?= $order['payment_method']; ?></dd>
+                                    </div>
+                                    <div>
+                                        <dt class="font-medium text-gray-900">Order Status</dt>
+                                        <dd class="mt-1 font-medium text-gray-900"><?= htmlspecialchars($order['status']); ?></dd>
+
+                                        <?php if ($order['status'] === 'To Receive') : ?>
+                                            <button 
+                                                onclick="updateStatus(<?= $order['id']; ?>)" 
+                                                class="mt-2 whitespace-nowrap text-green-600 hover:text-green-500">
+                                                Complete Order
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </dl>
                             </div>
@@ -207,6 +219,33 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
         </div>
     </div>
 </div>
+<script>
+    function updateStatus(orderId) {
+        if (confirm("Are you sure you want to update the status to Completed?")) {
+            fetch('update-status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ order_id: orderId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Status updated successfully.");
+                    location.reload(); // Refresh the page
+                } else {
+                    alert("Failed to update status: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while updating the status.");
+            });
+        }
+    }
+</script>
+
 
 </body>
 </html>
