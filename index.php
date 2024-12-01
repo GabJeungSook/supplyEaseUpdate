@@ -46,7 +46,7 @@ $products = mysqli_fetch_all($productsResult, MYSQLI_ASSOC);
 <div class="bg-white">
   <header class="relative">
     <nav aria-label="Top">
-      <div class="bg-green-900">
+      <div class="bg-green-900 w-100 h-33">
         <div class="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div></div>
           <div class="flex items-center space-x-6">
@@ -73,12 +73,12 @@ $products = mysqli_fetch_all($productsResult, MYSQLI_ASSOC);
       </div>
 
       <!-- Secondary navigation -->
-      <div class="bg-white">
+      <div class="bg-gray-300">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="flex h-16 items-center justify-between">
           <a href="#">
                 <span class="sr-only">Your Company</span>
-                <img class="h-48 w-auto -mt-3" src="resources/supplyEase_logo.png" alt="">
+                <img class="h-48 w-auto -mb-1" src="resources/supplyEase_logo.png" alt="">
               </a>
             <!-- <div class="hidden lg:flex lg:flex-1 lg:items-center">
              
@@ -128,7 +128,7 @@ $products = mysqli_fetch_all($productsResult, MYSQLI_ASSOC);
             foreach ($products as $product) {
                 echo '
                  <a href="product_details.php?id=' . $product['id'] . '" class="group">
-                    <img src="http://146.190.85.108/admin/pages/' . htmlspecialchars($product['image1']) . '" alt="' . htmlspecialchars($product['description']) . '" alt="Tall slender porcelain bottle with natural clay textured body and cork stopper." class="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]">
+                    <img src="http://146.190.85.108/admin/pages/' . htmlspecialchars($product['image1']) . '" alt="' . htmlspecialchars($product['description']) . '" alt="Tall slender porcelain bottle with natural clay textured body and cork stopper." class="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8] border-gray-400">
                     <h3 class="mt-4 text-sm text-gray-700">' . htmlspecialchars($product['description']) . '</h3>
                     <p class="mt-1 text-lg font-medium text-gray-900">₱ ' . htmlspecialchars($product['price']) . '</p>
                 </a>

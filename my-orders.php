@@ -57,21 +57,21 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
     <title>SupplyEase - My Orders</title>
 </head>
 <body>
-<a href="index.php" class="p-3 inline-block mb-6 bg-green-600 rounded-lg m-3 text-gray-50 hover:text-gray-100">
+<a href="index.php" class="p-3 inline-block mb-6 bg-green-900 rounded-lg m-3 text-gray-50 hover:text-gray-100">
     &larr; Back to Home
 </a>
 <div class="bg-white">
 <div class="py-16 sm:py-24">
         <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
             <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-0">
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">My Profile</h1>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl bg-gray-200">My Profile</h1>
             </div>
         </div>
 
         <div class="mt-16">
             <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
                 <div class="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
-                    <div class="p-4 border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+                    <div class="p-4 border-b border-t border-gray-500 bg-whitesmoke-500 shadow-sm sm:rounded-lg sm:border">
                            <!-- profile content -->
                            <div>
     <div class="mt-6 border-t border-gray-100">

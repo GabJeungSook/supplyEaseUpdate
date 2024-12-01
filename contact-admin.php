@@ -39,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
     <title>SupplyEase - Contact Admin</title>
 </head>
-<body class="bg-gray-100">
-    <a href="index.php" class="p-3 inline-block mb-6 bg-green-600 rounded-lg m-3 text-gray-50 hover:text-gray-100">
+<body class="bg-gray-200">
+    <a href="index.php" class="p-3 inline-block mb-6 bg-green-900 rounded-lg m-3 text-gray-50 hover:text-gray-100">
         &larr; Back to Home
     </a>
-    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div class="max-w-2xl mx-auto bg-gray-100 p-6 rounded-lg shadow-md">
         <h1 class="text-2xl font-bold mb-6">Contact Admin</h1>
         <?php if (isset($error_message)): ?>
             <div class="mb-4 text-red-600 bg-red-100 p-3 rounded">
@@ -52,17 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         <form method="POST" action="">
             <div class="mb-4">
-                <label for="concern" class="block text-gray-700 font-medium mb-2">Your Message</label>
+                <label for="concern" class="block text-gray-900 font-medium mb-2">Your Message</label>
                 <textarea 
                     id="concern" 
                     name="concern" 
                     rows="5" 
-                    class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
+                    class="w-full border border-gray-400 p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
                     placeholder="Write your message here..."></textarea>
             </div>
             <button 
                 type="submit" 
-                class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 focus:outline-none">
+                class="w-full bg-green-800 text-white p-3 rounded-lg hover:bg-green-700 focus:outline-none">
                 Submit
             </button>
         </form>
