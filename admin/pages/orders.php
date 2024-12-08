@@ -3,9 +3,41 @@
 require_once '../config.php'; // Assuming config.php contains the database connection
 
 // Fetch orders from the payments table along with the user's name
-$sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.status, p.created_at, u.name AS user_name 
+$sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.status, p.created_at, u.name AS user_name, ud.full_address
         FROM payments p
-        JOIN users u ON p.user_id = u.id"; // Joining with the users table to get the user's name
+        JOIN users u ON p.user_id = u.id 
+        LEFT JOIN user_details ud ON u.id = ud.user_id";  // Joining with the users table to get the user's name
+$result = $conn->query($sql);
+
+
+// Get the status filter (this could come from a form or URL parameter)
+$statusFilter = isset($_GET['status']) ? $_GET['status'] : 'all';
+
+// Modify the SQL query based on the filter
+// Modify the SQL query based on the filter
+if ($statusFilter === 'received') {
+    $sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.status, p.created_at, u.name AS user_name, ud.full_address
+            FROM payments p
+            JOIN users u ON p.user_id = u.id
+             LEFT JOIN user_details ud ON u.id = ud.user_id
+            WHERE p.status = 'received'
+            ORDER BY p.created_at DESC"; // Sorting by created_at in descending order
+} elseif ($statusFilter === 'completed') {
+    $sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.status, p.created_at, u.name AS user_name, ud.full_address
+            FROM payments p
+            JOIN users u ON p.user_id = u.id
+            LEFT JOIN user_details ud ON u.id = ud.user_id
+            WHERE p.status = 'completed'
+            ORDER BY p.created_at DESC"; // Sorting by created_at in descending order
+} else {
+    // Default to fetching all orders if no specific filter is provided
+    $sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.status, p.created_at, u.name AS user_name, ud.full_address
+            FROM payments p
+            JOIN users u ON p.user_id = u.id
+              LEFT JOIN user_details ud ON u.id = ud.user_id
+            ORDER BY p.created_at DESC"; // Sorting by created_at in descending order
+}
+
 $result = $conn->query($sql);
 
 // Check for errors
@@ -18,6 +50,18 @@ if ($result === false) {
     <div class="text-2xl font-semibold">
         <span>Orders</span>
     </div>
+    <label for="status">Status:</label>
+    <select name="status" id="status">
+        <option value="all" <?php echo (isset($_GET['status']) && $_GET['status'] == 'all') ? 'selected' : ''; ?>>All Orders</option>
+        <option value="place_order" <?php echo (isset($_GET['status']) && $_GET['status'] == 'place_order') ? 'selected' : ''; ?>>Placed Order</option>
+        <option value="preparing" <?php echo (isset($_GET['status']) && $_GET['status'] == 'preparing') ? 'selected' : ''; ?>>Preparing</option>
+        <option value="out_for_delivery" <?php echo (isset($_GET['status']) && $_GET['status'] == 'out_for_delivery') ? 'selected' : ''; ?>>Out for Delivery </option>
+        <option value="received" <?php echo (isset($_GET['status']) && $_GET['status'] == 'received') ? 'selected' : ''; ?>>Received Orders</option>
+        <option value="completed" <?php echo (isset($_GET['status']) && $_GET['status'] == 'completed') ? 'selected' : ''; ?>>Cancelled Orders</option>
+        
+
+    </select>
+    <button type="submit">Filter</button>
     <div class="mt-10 px-4 sm:px-6 lg:px-8">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
@@ -36,6 +80,7 @@ if ($result === false) {
                             <tr>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">User Name</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Order ID</th>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"> Address</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Total Amount</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Payment Method</th>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Status</th>
@@ -53,6 +98,7 @@ if ($result === false) {
                                     echo "<tr>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0'>" . htmlspecialchars($row['user_name']) . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . htmlspecialchars($row['order_id']) . "</td>";
+                                    echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . (!empty($row['full_address']) ? htmlspecialchars($row['full_address']) : "No address provided") . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>₱ " . number_format($row['amount'], 2) . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . htmlspecialchars($row['payment_method']) . "</td>";
                                     echo "<td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900'>" . htmlspecialchars($row['status']) . "</td>";

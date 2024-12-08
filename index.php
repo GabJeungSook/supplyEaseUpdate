@@ -9,6 +9,17 @@ include('config.php');
 $query = "SELECT id, name FROM categories";
 $result = mysqli_query($conn, $query);
 
+//function for item count
+function getCartItemCount($userId, $conn) {
+  $stmt = $conn->prepare("SELECT SUM(quantity) AS total_items FROM cart_items WHERE user_id = ?");
+  $stmt->bind_param("i", $userId);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+  return $row['total_items'] ?? 0; // Return 0 if no items are found
+}
+
+
 if (!$result) {
     die("Database query failed: " . mysqli_error($conn));
 }
@@ -32,6 +43,9 @@ if (!$productsResult) {
 }
 
 $products = mysqli_fetch_all($productsResult, MYSQLI_ASSOC);
+
+$cartCount = isset($_SESSION['user_id']) ? getCartItemCount($_SESSION['user_id'], $conn) : 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -57,11 +71,16 @@ $products = mysqli_fetch_all($productsResult, MYSQLI_ASSOC);
               <a href="contact-admin.php" class="text-sm font-medium text-white hover:text-gray-100">Contact Admin</a>
               <a href="logout.php" class="text-sm font-medium text-white hover:text-gray-100">Log out</a>
                 <!-- Cart Icon -->
-            <a href="cart.php" class="text-sm font-medium text-white hover:text-gray-100">
-              <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-              </svg>
-            </a>
+                <a href="cart.php" class="relative text-sm font-medium text-white hover:text-gray-100">
+  <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+  </svg>
+  <!-- Cart Item Count -->
+  <span id="cart-count" class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+    <?php echo $cartCount; ?>
+</span>
+
+</a>
             <?php else: ?>
               <!-- If user is not logged in, show login and create account buttons -->
               <a href="login.php" class="cursor-pointer text-sm font-medium text-white hover:text-gray-100">Log in</a>

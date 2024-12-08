@@ -204,8 +204,13 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                                                 <div class="flex flex-1 justify-center">
                                                     <a href="product_details.php?id=<?= $item['product_id']; ?>" class="whitespace-nowrap text-indigo-600 hover:text-indigo-500">View product</a>
                                                 </div>
+                                
                                                 <div class="flex flex-1 justify-center pl-4">
                                                     <!-- You can add additional options here (e.g., cancel, return) -->
+                                                     <!-- Cancel Button -->
+                                                <div class="flex flex-1 justify-center">
+                                                    <a href="cancel_order.php" class="whitespace-nowrap text-indigo-600 hover:text-Red-500">Cancel Order</a> 
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>

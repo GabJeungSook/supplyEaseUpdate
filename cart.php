@@ -91,6 +91,15 @@ while ($row = $result->fetch_assoc()) {
 <div class="bg-white">
     <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-0">
         <h1 class="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">My Cart</h1>
+                <!-- Additional Address Section -->
+                <div class="mt-6">
+                    <label for="additional-address" class="block text-sm font-medium text-gray-700">Additional Shipping Address(Optional)</label>
+                    <textarea id="additional-address" name="additional-address" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter an additional shipping address"></textarea>
+                    <button type="button" id="confirm-additional-address" class="mt-2 w-full rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            onclick="confirmAdditionalAddress()">Confirm Additional Address</button>
+                    <p id="additional-address-confirmation" class="mt-2 text-sm text-green-600 hidden">Additional address confirmed!</p>
+                </div>
+
 
         <form class="mt-12">
             <section aria-labelledby="cart-heading">
