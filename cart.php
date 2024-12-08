@@ -237,7 +237,7 @@ function handleCOD() {
         const formData = new FormData();
         formData.append('orderID', 'COD-' + Date.now()); // Generate unique order ID
         formData.append('payerID', 'COD-' + Date.now()); // Generate unique payer ID
-        formData.append('paymentStatus', 'COD'); // Add payment details
+        //formData.append('paymentStatus', 'COD'); // Add payment details
         formData.append('orderDetails', JSON.stringify(orderDetails)); // Add order items
         formData.append('totalAmount', totalAmount); // Include the total amount
         formData.append('payment_method', 'COD'); // Specify payment method

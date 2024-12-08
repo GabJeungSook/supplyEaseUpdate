@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve PayPal data
     $orderID = $_POST['orderID'];
     $payerID = $_POST['payerID'];
-    $paymentStatus = $_POST['paymentStatus'];
+    $paymentStatus = 'COMPLETED';
     $orderDetails = json_decode($_POST['orderDetails'], true); // Get order items (cart details)
     $totalAmount = $_POST['totalAmount']; // The total amount of the payment
     $payment_method = $_POST['payment_method'];
