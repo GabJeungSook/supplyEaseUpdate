@@ -13,12 +13,12 @@ $resultProducts = $conn->query($totalProductsQuery);
 $totalProducts = $resultProducts->fetch_assoc()['total_products'];
 
 // Fetch total orders
-$totalOrdersQuery = "SELECT COUNT(*) AS total_orders FROM payments";
+$totalOrdersQuery = "SELECT COUNT(*) AS total_orders FROM payments where status != 'Cancelled'";
 $resultOrders = $conn->query($totalOrdersQuery);
 $totalOrders = $resultOrders->fetch_assoc()['total_orders'];
 
 // Fetch total sales
-$totalSalesQuery = "SELECT SUM(amount) AS total_sales FROM payments WHERE payment_status = 'COMPLETED'";
+$totalSalesQuery = "SELECT SUM(amount) AS total_sales FROM payments WHERE status = 'Order Complete'";
 $resultSales = $conn->query($totalSalesQuery);
 $totalSales = $resultSales->fetch_assoc()['total_sales'];
 

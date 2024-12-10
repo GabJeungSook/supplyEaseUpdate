@@ -36,6 +36,17 @@ while ($row = $result->fetch_assoc()) {
     $cart_items[] = $row;
     $total += $row['sub_total'];
 }
+// Fetch the user's default address
+$default_address = '';
+$sql_address = "SELECT full_address as address FROM user_details WHERE user_id = ?";
+$stmt_address = $conn->prepare($sql_address);
+$stmt_address->bind_param('i', $user_id);
+$stmt_address->execute();
+$result_address = $stmt_address->get_result();
+
+if ($row_address = $result_address->fetch_assoc()) {
+    $default_address = $row_address['address'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,15 +101,18 @@ while ($row = $result->fetch_assoc()) {
 <body>
 <div class="bg-white">
     <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-0">
-        <h1 class="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">My Cart</h1>
-                <!-- Additional Address Section -->
-                <div class="mt-6">
-                    <label for="additional-address" class="block text-sm font-medium text-gray-700">Additional Shipping Address(Optional)</label>
-                    <textarea id="additional-address" name="additional-address" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter an additional shipping address"></textarea>
-                    <button type="button" id="confirm-additional-address" class="mt-2 w-full rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            onclick="confirmAdditionalAddress()">Confirm Additional Address</button>
-                    <p id="additional-address-confirmation" class="mt-2 text-sm text-green-600 hidden">Additional address confirmed!</p>
-                </div>
+    <div class="mt-6">
+    <div class="flex items-center">
+        <input type="checkbox" id="use-default-address" class="h-4 w-4 text-blue-600 border-gray-300 rounded" checked onchange="toggleAddressField()">
+        <label for="use-default-address" class="ml-2 block text-sm font-medium text-gray-700">Use default shipping address</label>
+    </div>
+    <textarea id="default-address" name="default-address" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" disabled required>
+        <?php echo htmlspecialchars($default_address); ?>
+    </textarea>
+    <!-- <button type="button" id="update-address" class="mt-2 w-full rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            onclick="updateAddress()">Update Address</button> -->
+    <p id="address-update-confirmation" class="mt-2 text-sm text-green-600 hidden">Address updated successfully!</p>
+</div>
 
 
         <form class="mt-12">
@@ -189,6 +203,16 @@ while ($row = $result->fetch_assoc()) {
         return actions.order.capture().then(function(details) {
             const orderDetails = <?php echo json_encode($cart_items); ?>;
             const totalAmount = '<?php echo $total; ?>';
+
+            const addressField = document.getElementById('default-address');
+            const shippingAddress = addressField.value.trim();
+
+             // Validate shipping address
+            if (!shippingAddress) {
+                alert('Please provide a valid shipping address.');
+                return;
+            }
+
             // Redirect to payment processing script
             const formData = new FormData();
             formData.append('orderID', data.orderID);
@@ -197,6 +221,7 @@ while ($row = $result->fetch_assoc()) {
             formData.append('orderDetails', JSON.stringify(orderDetails)); // Add order items
             formData.append('totalAmount', totalAmount); // Include the total amount
             formData.append('payment_method', 'PAYPAL');
+            formData.append('shipping_address', shippingAddress); // Include the shipping address
             console.log(formData);
             fetch('process_payment.php', {
                 method: 'POST',
@@ -231,6 +256,15 @@ function handleCOD() {
     const orderDetails = <?php echo json_encode($cart_items); ?>;
     const totalAmount = <?php echo $total; ?>;
 
+    const addressField = document.getElementById('default-address');
+    const shippingAddress = addressField.value.trim();
+
+    // Validate shipping address
+    if (!shippingAddress) {
+            alert('Please provide a valid shipping address.');
+            return;
+    }
+
     // Confirm action with the user
     if (confirm('Are you sure you want to place an order with Cash on Delivery?')) {
         // Create FormData to send to the server
@@ -241,6 +275,7 @@ function handleCOD() {
         formData.append('orderDetails', JSON.stringify(orderDetails)); // Add order items
         formData.append('totalAmount', totalAmount); // Include the total amount
         formData.append('payment_method', 'COD'); // Specify payment method
+        formData.append('shipping_address', shippingAddress);
 
         // Send data to process_payment.php via POST
         fetch('process_payment_cod.php', {
@@ -265,6 +300,22 @@ function handleCOD() {
             });
     }
 }
+ // Toggles the address field between enabled/blank and disabled with default value
+ function toggleAddressField() {
+        const checkbox = document.getElementById('use-default-address');
+        const addressField = document.getElementById('default-address');
+
+        if (checkbox.checked) {
+            // Set to default and disable the field
+            addressField.value = "<?php echo htmlspecialchars($default_address); ?>";
+            addressField.disabled = true;
+        } else {
+            // Clear the field and enable it
+            addressField.value = '';
+            addressField.disabled = false;
+        }
+    }
+
 </script>
 </body>
 </html>

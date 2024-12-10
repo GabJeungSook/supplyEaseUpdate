@@ -10,22 +10,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderDetails = json_decode($_POST['orderDetails'], true); // Get order items (cart details)
     $totalAmount = $_POST['totalAmount']; // The total amount of the payment
     $payment_method = $_POST['payment_method'];
+    $shipping_address = $_POST['shipping_address'];
 
         $user_id = $_SESSION['user_id'];
 
         // Insert payment details into the payments table
         $stmt = $conn->prepare("
-            INSERT INTO payments (user_id, order_id, payer_id, payment_status, amount, payment_method) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO payments (user_id, order_id, payer_id, payment_status, amount, payment_method, shipping_address) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->bind_param(
-            'isssds',
+            'isssdss',
             $user_id,
             $orderID,
             $payerID,
             $paymentStatus,
             $totalAmount,
-            $payment_method
+            $payment_method,
+            $shipping_address
         );
         $stmt->execute();
         $paymentID = $stmt->insert_id; // Get the last inserted payment ID

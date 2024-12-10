@@ -158,7 +158,7 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                                         <dt class="font-medium text-gray-900">Order Status</dt>
                                         <dd class="mt-1 font-medium text-gray-900"><?= htmlspecialchars($order['status']); ?></dd>
 
-                                        <?php if ($order['status'] === 'To Receive') : ?>
+                                        <?php if ($order['status'] === 'Out For Delivery') : ?>
                                             <button 
                                                 onclick="updateStatus(<?= $order['id']; ?>)" 
                                                 class="mt-2 whitespace-nowrap text-green-600 hover:text-green-500">
@@ -206,12 +206,16 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
                                                 </div>
                                 
                                                 <div class="flex flex-1 justify-center pl-4">
-                                                    <!-- You can add additional options here (e.g., cancel, return) -->
-                                                     <!-- Cancel Button -->
-                                                <div class="flex flex-1 justify-center">
-                                                    <a href="cancel_order.php" class="whitespace-nowrap text-indigo-600 hover:text-Red-500">Cancel Order</a> 
-                                                </div>
-                                                </div>
+                                                <!-- Check if the status is 'Order Placed' -->
+                                                <?php if ($order['status'] === 'Order Placed'): ?>
+                                                    <!-- Cancel Button -->
+                                                    <div class="flex flex-1 justify-center">
+                                                    <a href="cancel_order.php?order_id=<?php echo htmlspecialchars($order['id']); ?>" 
+                                                        onclick="return confirmCancel()"
+                                                        class="whitespace-nowrap text-indigo-600 hover:text-red-500">Cancel Order</a>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
                                             </div>
                                         </div>
                                     </li>
@@ -249,6 +253,11 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
             });
         }
     }
+
+    function confirmCancel() {
+        return confirm('Are you sure you want to cancel this order? This action cannot be undone.');
+    }
+
 </script>
 
 
