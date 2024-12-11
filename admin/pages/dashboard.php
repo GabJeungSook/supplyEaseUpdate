@@ -18,7 +18,7 @@ $resultOrders = $conn->query($totalOrdersQuery);
 $totalOrders = $resultOrders->fetch_assoc()['total_orders'];
 
 // Fetch total sales
-$totalSalesQuery = "SELECT SUM(amount) AS total_sales FROM payments WHERE status = 'Order Complete'";
+$totalSalesQuery = "SELECT SUM(amount) AS total_sales FROM payments WHERE status = 'Completed'";
 $resultSales = $conn->query($totalSalesQuery);
 $totalSales = $resultSales->fetch_assoc()['total_sales'];
 

@@ -1,7 +1,6 @@
 <?php
 // Include the database connection
 require_once '../config.php'; // Assuming config.php contains the database connection
-
 // Get the status filter from the URL or default to 'all'
 $statusFilter = isset($_GET['status']) ? $_GET['status'] : 'all';
 
@@ -11,45 +10,48 @@ $sql = "SELECT p.id, p.order_id, p.amount, p.payment_method, p.shipping_address,
         JOIN users u ON p.user_id = u.id";
 
 // Modify the SQL query based on the filter
-if ($statusFilter === 'received') {
-    $sql .= " WHERE p.status = 'received'";
-} elseif ($statusFilter === 'completed') {
-    $sql .= " WHERE p.status = 'completed'";
-} elseif ($statusFilter === 'place_order') {
-    $sql .= " WHERE p.status = 'place_order'";
-} elseif ($statusFilter === 'preparing') {
-    $sql .= " WHERE p.status = 'preparing'";
-} elseif ($statusFilter === 'out_for_delivery') {
-    $sql .= " WHERE p.status = 'out_for_delivery'";
+if ($statusFilter !== 'all') {
+    $sql .= " WHERE p.status = ?";
 }
 
 // Add sorting by creation date in descending order
 $sql .= " ORDER BY p.created_at DESC";
 
+// Prepare the statement
+$stmt = $conn->prepare($sql);
+
+// Bind the parameter if a specific status is selected
+if ($statusFilter !== 'all') {
+    $stmt->bind_param("s", $statusFilter);
+}
+
 // Execute the query
-$result = $conn->query($sql);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Check for errors
 if ($result === false) {
     die("Error fetching orders: " . $conn->error);
 }
+
 ?>
 
 <div>
     <div class="text-2xl font-semibold">
         <span>Orders</span>
     </div>
-    <form method="GET" action="index.php?page=orders">
-        <label for="status">Status:</label>
-        <select name="status" id="status" onchange="this.form.submit()">
-            <option value="all" <?php echo ($statusFilter === 'all') ? 'selected' : ''; ?>>All Orders</option>
-            <option value="Order Placed" <?php echo ($statusFilter === 'Order Placed') ? 'selected' : ''; ?>>Order Placed</option>
-            <option value="preparing" <?php echo ($statusFilter === 'preparing') ? 'selected' : ''; ?>>Preparing</option>
-            <option value="out_for_delivery" <?php echo ($statusFilter === 'out_for_delivery') ? 'selected' : ''; ?>>Out for Delivery</option>
-            <option value="received" <?php echo ($statusFilter === 'received') ? 'selected' : ''; ?>>Received Orders</option>
-            <option value="completed" <?php echo ($statusFilter === 'completed') ? 'selected' : ''; ?>>Cancelled Orders</option>
-        </select>
-    </form>
+    <form method="GET" action="index.php">
+    <input type="hidden" name="page" value="orders">
+    <label for="status">Status:</label>
+    <select name="status" id="status" onchange="this.form.submit()">
+        <option value="all" <?php echo ($statusFilter === 'all') ? 'selected' : ''; ?>>All Orders</option>
+        <option value="Order Placed" <?php echo ($statusFilter === 'Order Placed') ? 'selected' : ''; ?>>Order Placed</option>
+        <option value="preparing" <?php echo ($statusFilter === 'preparing') ? 'selected' : ''; ?>>Preparing</option>
+        <option value="Out for Delivery" <?php echo ($statusFilter === 'Out for Delivery') ? 'selected' : ''; ?>>Out for Delivery</option>
+        <option value="completed" <?php echo ($statusFilter === 'completed') ? 'selected' : ''; ?>>Completed Orders</option>
+        <option value="Cancelled" <?php echo ($statusFilter === 'Cancelled') ? 'selected' : ''; ?>>Cancelled Orders</option>
+    </select>
+</form>
 
     <div class="mt-10 px-4 sm:px-6 lg:px-8">
         <div class="mt-8 flow-root">
