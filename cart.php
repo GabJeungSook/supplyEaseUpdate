@@ -47,6 +47,7 @@ $result_address = $stmt_address->get_result();
 if ($row_address = $result_address->fetch_assoc()) {
     $default_address = $row_address['address'];
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -113,7 +114,6 @@ if ($row_address = $result_address->fetch_assoc()) {
             onclick="updateAddress()">Update Address</button> -->
     <p id="address-update-confirmation" class="mt-2 text-sm text-green-600 hidden">Address updated successfully!</p>
 </div>
-
 
         <form class="mt-12">
             <section aria-labelledby="cart-heading">

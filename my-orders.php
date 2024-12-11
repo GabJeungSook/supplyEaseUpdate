@@ -10,7 +10,35 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Query to fetch user data from `users` and `user_details` tables
+// Get status filter value
+$statusFilter = isset($_GET['status']) ? $_GET['status'] : 'all';
+
+// Base query for fetching orders
+$orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at, p.payment_method, p.status 
+                 FROM payments p 
+                 WHERE p.user_id = ?";
+
+// Add a condition if a specific filter is applied
+if ($statusFilter !== 'all') {
+    $orders_query .= " AND p.status = ?";
+}
+
+$orders_query .= " ORDER BY p.created_at DESC";
+
+// Prepare and execute query
+$stmt = $conn->prepare($orders_query);
+
+// Bind parameters dynamically
+if ($statusFilter !== 'all') {
+    $stmt->bind_param('is', $user_id, $statusFilter);
+} else {
+    $stmt->bind_param('i', $user_id);
+}
+
+$stmt->execute();
+$orders_result = $stmt->get_result();
+
+// Query for user data
 $users_query = "
     SELECT 
         users.name, 
@@ -30,23 +58,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 $userData = $result->fetch_assoc();
 
-// Fetch the orders and order details from the database
-$orders_query = "SELECT p.id, p.order_id, p.payment_status, p.amount, p.created_at, p.payment_method, p.status
-                 FROM payments p
-                 WHERE p.user_id = ? 
-                 ORDER BY p.created_at DESC";
-
-$stmt = $conn->prepare($orders_query);
-$stmt->bind_param('i', $user_id);
-$stmt->execute();
-$orders_result = $stmt->get_result();
-
-// Fetch order items for each order
+// Query for fetching order items
 $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total, pr.description, pr.image1
                       FROM order_details od
                       JOIN products pr ON od.product_id = pr.id
                       WHERE od.order_id = ?";
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +77,7 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
     &larr; Back to Home
 </a>
 <div class="bg-white">
-<div class="py-16 sm:py-24">
+<div class="py-4 sm:py-8">
         <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
             <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-0">
                 <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl bg-gray-200">My Profile</h1>
@@ -118,8 +134,22 @@ $order_items_query = "SELECT od.product_id, od.quantity, od.price, od.sub_total,
             </div>
         </div>
     </div>
-
-    <div class="py-16 sm:py-24">
+    <div class="text-2xl font-semibold ml-28 mt-10">
+        <span>Filter Status</span>
+    </div>
+    <form method="GET" action="my-orders.php">
+    <input type="hidden" name="page" value="orders">
+    <label for="status" class="ml-32">Status:</label>
+    <select name="status" id="status" onchange="this.form.submit()">
+        <option value="all" <?php echo ($statusFilter === 'all') ? 'selected' : ''; ?>>All Orders</option>
+        <option value="Order Placed" <?php echo ($statusFilter === 'Order Placed') ? 'selected' : ''; ?>>Order Placed</option>
+        <option value="preparing" <?php echo ($statusFilter === 'preparing') ? 'selected' : ''; ?>>Preparing</option>
+        <option value="Out for Delivery" <?php echo ($statusFilter === 'Out for Delivery') ? 'selected' : ''; ?>>Out for Delivery</option>
+        <option value="completed" <?php echo ($statusFilter === 'completed') ? 'selected' : ''; ?>>Completed Orders</option>
+        <option value="Cancelled" <?php echo ($statusFilter === 'Cancelled') ? 'selected' : ''; ?>>Cancelled Orders</option>
+    </select>
+</form>
+    <div class="py-4 sm:py-8">
         <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
             <div class="mx-auto max-w-2xl px-4 lg:max-w-4xl lg:px-0">
                 <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">My Orders</h1>
